@@ -2,10 +2,13 @@ package Paneles;
 
 import Conexion.DataBase;
 import Conexion.DataManager;
+import interfaz.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -23,10 +26,31 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
     /**
      * Creates new form CRUD_Usuarios_Vehiculos
      */
-    
+    Principal home;
 
-    public CRUD_Usuarios_Vehiculos() {
+    public CRUD_Usuarios_Vehiculos(Principal principal) {
+        initComponents();
+        this.home = principal;
+        this.cargarTabla();
+        this.bloquearBotonesInicio();
 
+        jtblUsuVehi.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (jtblUsuVehi.getSelectedRow() != -1) {
+                    Integer fila = jtblUsuVehi.getSelectedRow();
+                    jtxtCedula.setText(jtblUsuVehi.getValueAt(fila, 1).toString());
+                    String nomApe = jtblUsuVehi.getValueAt(fila, 2).toString();
+                    String[] arraynomApe = nomApe.split(" ");
+                    jtxtNombre.setText(arraynomApe[0]);
+                    jtxtApellido.setText(arraynomApe[1]);
+                    jtxtPlaca.setText(jtblUsuVehi.getValueAt(fila, 3).toString());
+                    jtxtColor.setText(jtblUsuVehi.getValueAt(fila, 4).toString());
+                    jtxtMarca.setText(jtblUsuVehi.getValueAt(fila, 5).toString());
+
+                }
+            }
+        });
         initComponents();
             }
 
@@ -104,7 +128,19 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
 
     }
     
-  
+    public void bloquearBotonesInicio(){
+        jbtnGuardar.setEnabled(false);
+        jbtnActualizar.setEnabled(false);
+        jbtnBorrar.setEnabled(false);
+    }
+    
+    public void desbloquearBotonesNuevo(){
+        jbtnNuevo.setEnabled(false);
+        jbtnActualizar.setEnabled(false);
+        jbtnGuardar.setEnabled(true);
+        jbtnCancelar.setEnabled(true);
+        jbtnBorrar.setEnabled(false);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
