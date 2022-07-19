@@ -1,5 +1,9 @@
 package Paneles;
 
+import Conexion.DataBase;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,7 +26,41 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
         initComponents();
             }
 
-  
+  public void guardarUsuarioVechiculo() {
+        try {
+            String cedula, nombre, apellido, placa, color, marca;
+
+            cedula = jtxtCedula.getText();
+            nombre = jtxtNombre.getText();
+            apellido = jtxtApellido.getText();
+            placa = jtxtPlaca.getText();
+            color = jtxtColor.getText();
+            marca = jtxtMarca.getText();
+
+            DataBase cn = new DataBase();
+            Connection cc = cn.conectar();
+
+            String sqlUsuario = "INSERT INTO usuarios (cedula, nombre, apellido) VALUES (?,?,?)";
+            String sqlVehiculo = "INSERT INTO vehiculos (id_usuario, placa, marca, color) VALUES (?,?,?,?)";
+
+            PreparedStatement psd = cc.prepareStatement(sqlUsuario);
+            psd.setString(1, cedula);
+            psd.setString(2, nombre);
+            psd.setString(3, apellido);
+            psd.executeUpdate();
+
+            PreparedStatement psdVehiculo = cc.prepareStatement(sqlVehiculo);
+            psdVehiculo.setString(1, cedula);
+            psdVehiculo.setString(2, placa);
+            psdVehiculo.setString(3, marca);
+            psdVehiculo.setString(4, color);
+            psdVehiculo.executeUpdate();
+
+        } catch (Exception ex) {
+
+        }
+
+    }
     
   
     /**
