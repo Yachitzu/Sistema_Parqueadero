@@ -285,13 +285,20 @@ public class IngresarVehiculo extends javax.swing.JPanel {
 
     private void jbtnIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnIngresoActionPerformed
         // TODO add your handling code here:
-
+        this.buscarPlaca(jtxtPlacaIngreso.getText());
+        for (int i = 0; i < numeroPlaza.length; i++) {
+            System.out.println(numeroPlaza[i]);
+        }
+        System.out.println("----------------------------------");
 
     }//GEN-LAST:event_jbtnIngresoActionPerformed
 
     private void jbtnSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSalidaActionPerformed
         // TODO add your handling code here:
-
+        this.salidaVehiculo(jtxtPlacaIngreso.getText());
+        for (int i = 0; i < numeroPlaza.length; i++) {
+            System.out.println(numeroPlaza[i]);
+        }
     }//GEN-LAST:event_jbtnSalidaActionPerformed
 
     private void jbtnPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPrecioActionPerformed
