@@ -1,8 +1,12 @@
 package Paneles;
 
 import Conexion.DataBase;
+import Conexion.DataManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -56,6 +60,44 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
             psdVehiculo.setString(4, color);
             psdVehiculo.executeUpdate();
 
+        } catch (Exception ex) {
+
+        }
+
+    }
+  
+  String[] registro = new String[6];
+
+    public void cargarTabla() {
+        try {
+            DefaultTableModel modeloTabla = new DefaultTableModel();
+            String[] titulos = {"N.", "Cédula", "Nombre y Apellido", "Placa", "Color", "Marca"};
+            modeloTabla.setColumnIdentifiers(titulos);
+            jtblUsuVehi.setModel(modeloTabla);
+
+            DataManager manejador = new DataManager();
+            ResultSet datos = manejador.obtenerDatos("Select * from usuarios");
+            String[] registro = new String[6];
+            int num = 1;
+            ArrayList<Object> lista = new ArrayList<>();
+
+            while (datos.next()) {
+                registro[0] = String.valueOf(num);
+                registro[1] = datos.getString("cedula");
+                String nombre = datos.getString("nombre");
+                String apellido = datos.getString("apellido");
+                registro[2] = nombre + " " + apellido;
+
+                lista = manejador.resultado("SELECT placa, color, marca FROM vehiculos WHERE id_usuario='" + registro[1] + "'");
+                registro[3] = lista.get(0).toString();
+                registro[4] = lista.get(1).toString();
+                registro[5] = lista.get(2).toString();
+                modeloTabla.addRow(registro);
+                num++;
+
+            }
+            manejador.cerrar();
+            jtblUsuVehi.setModel(modeloTabla);
         } catch (Exception ex) {
 
         }
