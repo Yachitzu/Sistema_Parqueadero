@@ -140,6 +140,47 @@ public class IngresarVehiculo extends javax.swing.JPanel {
             Logger.getLogger(IngresarVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }   
+      
+      public void calcularPrecio(String placa) {
+        DataManager manejador = new DataManager();
+        ArrayList<Object> horas = new ArrayList<>();
+        horas = manejador.resultado("Select hora_entrada, hora_salida from servicio where placa_vehi='" + placa + "'");
+
+        String[] Entrada = String.valueOf(horas.get(0)).split(":");
+        String[] Salida = String.valueOf(horas.get(1)).split(":");
+
+        int horaEntrada = Integer.valueOf(Entrada[0]);
+        System.out.println(horaEntrada);
+        int minutoEntrada = Integer.valueOf(Entrada[1]);
+        System.out.println(minutoEntrada);
+
+        int horaSalida = Integer.valueOf(Salida[0]);
+        int minutoSalida = Integer.valueOf(Salida[1]);
+
+        int minutosEntrada = (horaEntrada * 60) + minutoEntrada;
+        System.out.println(minutosEntrada);
+        int minutosSalida = (horaSalida * 60) + minutoSalida;
+        System.out.println(minutosSalida);
+        int minutosTrans = minutosSalida - minutosEntrada;
+        System.out.println(minutosTrans);
+
+        int numeroRestas = 0;
+        int residuo = 0;
+        if (minutosTrans > 60) {
+            while (minutosTrans > 60) {
+                minutosTrans = minutosTrans - 60;
+                numeroRestas++;
+            }
+        }
+
+        int precio = numeroRestas * 1;
+        if (minutosTrans > 0) {
+            precio = precio + 1;
+        }
+        System.out.println(precio);
+        manejador.ejecutarConsulta("Update servicio set precio='" + precio + "'where placa_vehi='" + placa + "'");
+        jlblPrecio.setText(String.valueOf(precio));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
