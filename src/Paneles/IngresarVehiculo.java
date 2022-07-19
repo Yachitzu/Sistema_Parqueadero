@@ -120,6 +120,26 @@ public class IngresarVehiculo extends javax.swing.JPanel {
             break;
         }
     }
+         
+      public void salidaVehiculo(String placa) {
+        try {
+            DataManager manejador = new DataManager();
+            String horaSalida = this.obtenerHora();
+            ArrayList<Object> plaza = new ArrayList<>();
+            plaza = manejador.resultado("SELECT plaza FROM servicio WHERE placa_vehi = '" + placa + "';");
+            int plazaDevolver = Integer.valueOf(plaza.get(0).toString());
+            this.devolverPlaza(plazaDevolver);
+
+            DataBase cn = new DataBase();
+            Connection cc = cn.conectar();
+
+            String sql = "Update servicio set hora_salida= '" + horaSalida + "' where placa_vehi='" + placa + "'";
+            manejador.ejecutarConsulta(sql);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(IngresarVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }   
 
     /**
      * This method is called from within the constructor to initialize the form.
