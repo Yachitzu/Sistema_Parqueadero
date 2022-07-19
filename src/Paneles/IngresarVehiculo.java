@@ -5,6 +5,18 @@
  */
 package Paneles;
 
+import Conexion.DataBase;
+import Conexion.DataManager;
+import interfaz.Principal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 
 /**
@@ -16,9 +28,97 @@ public class IngresarVehiculo extends javax.swing.JPanel {
     /**
      * Creates new form IngresarVehiculo
      */
-    public IngresarVehiculo() {
-        initComponents();
+     Principal home;
+    int[] numeroPlaza = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
+    int plazasdisponibles = 10;
+    
+    public IngresarVehiculo(Principal principal) {
+        initComponents();
+        this.home = principal;
+    }
+    
+     public void buscarPlaca(String placa) {
+        DataManager manejador = new DataManager();
+        ArrayList<Object> tablavehiculos = new ArrayList<>();
+        tablavehiculos = manejador.resultado("SELECT placa FROM vehiculos WHERE placa = '" + placa + "';");
+
+        ArrayList<Object> tablaservicioEntrada = new ArrayList<>();
+        tablaservicioEntrada = manejador.resultado("SELECT hora_entrada FROM servicio WHERE placa_vehi = '" + placa + "';");
+        if (!tablavehiculos.isEmpty() && tablaservicioEntrada.isEmpty()) {
+            jbtnIngreso.setEnabled(true);
+            this.ingresoVehiculo(placa);
+        } else if (!tablavehiculos.isEmpty() && !tablaservicioEntrada.isEmpty()) {
+            System.out.println("Ya ingresado");
+        } else if (tablavehiculos.isEmpty() && tablaservicioEntrada.isEmpty()) {
+            System.out.println("No registrado");
+        }
+
+    }
+     
+      public void ingresoVehiculo(String placa) {
+        try {
+            String cedula = null, placa1 = null;
+            DataManager manejador = new DataManager();
+            ResultSet datos = manejador.obtenerDatos("Select id_usuario, placa from vehiculos where placa='" + placa + "';");
+            while (datos.next()) {
+                cedula = datos.getString("id_usuario");
+                placa1 = datos.getString("placa");
+            }
+            String horaEntrada = this.obtenerHora();
+            String plaza = String.valueOf(this.asignarPlaza());
+
+            DataBase cn = new DataBase();
+            Connection cc = cn.conectar();
+
+            String sql = "INSERT INTO servicio (plaza, id_usuario, placa_vehi, hora_entrada) VALUES (?,?,?,?);";
+            PreparedStatement psd = cc.prepareStatement(sql);
+            psd.setString(1, plaza);
+            psd.setString(2, cedula);
+            psd.setString(3, placa1);
+            psd.setString(4, horaEntrada);
+//            psd.setString(5, "null");
+//            psd.setString(6, "null");
+
+            psd.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(IngresarVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      
+       public String obtenerHora() {
+        LocalDateTime locaDate = LocalDateTime.now();
+        int hours = locaDate.getHour();
+        int minutes = locaDate.getMinute();
+        int seconds = locaDate.getSecond();
+        System.out.println("Hora actual : " + hours + ":" + minutes);
+        return String.valueOf(hours + ":" + minutes);
+
+    }
+       
+        public int asignarPlaza() {
+
+        int plaza = 0;
+        for (int i = 0; i <= numeroPlaza.length; i++) {
+            if (numeroPlaza[i] != 0) {
+                plaza = numeroPlaza[i];
+                numeroPlaza[i] = 0;
+                break;
+            }
+            break;
+        }
+        return plaza;
+    }
+        
+         public void devolverPlaza(int plaza) {
+        for (int i = 0; i < numeroPlaza.length; i++) {
+            if (numeroPlaza[i] == 0) {
+                numeroPlaza[i] = plaza;
+                break;
+            }
+            break;
+        }
     }
 
     /**
