@@ -303,7 +303,7 @@ public class IngresarVehiculo extends javax.swing.JPanel {
 
     private void jbtnPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPrecioActionPerformed
         // TODO add your handling code here:
-
+        this.calcularPrecio(jtxtPlacaIngreso.getText());
     }//GEN-LAST:event_jbtnPrecioActionPerformed
 
 
