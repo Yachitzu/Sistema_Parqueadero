@@ -4,9 +4,14 @@ import Conexion.DataBase;
 import Conexion.DataManager;
 import interfaz.Principal;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -276,7 +281,8 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here:
-       
+       this.guardarUsuarioVechiculo();
+        this.cargarTabla();
     }//GEN-LAST:event_jbtnGuardarActionPerformed
     
     private void jtxtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtApellidoActionPerformed
@@ -285,19 +291,25 @@ public class CRUD_Usuarios_Vehiculos extends javax.swing.JPanel {
 
     private void jbtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnActualizarActionPerformed
         // TODO add your handling code here:
-       
-
+       String cedula = jtxtCedula.getText();
+        String nombre = jtxtNombre.getText();
+        String apellido = jtxtApellido.getText();
+        String color = jtxtColor.getText();
+        
+        this.actualizarDatos(cedula, nombre, apellido, color);
 
     }//GEN-LAST:event_jbtnActualizarActionPerformed
 
     private void jbtnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBorrarActionPerformed
         // TODO add your handling code here:
-         
+         String cedula = jtxtCedula.getText();
+         this.eliminarUsuario(cedula);
+         this.cargarTabla();
     }//GEN-LAST:event_jbtnBorrarActionPerformed
 
     private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
         // TODO add your handling code here:
-       
+       this.desbloquearBotonesNuevo();
     }//GEN-LAST:event_jbtnNuevoActionPerformed
 
 
